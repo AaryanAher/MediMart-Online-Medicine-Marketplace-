@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MediMart – Online Medicine Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#">MediMart</a>
+      <form class="search" onsubmit="return false">
+        <input id="q" type="search" placeholder="Search medicines, brands..." aria-label="Search" />
+        <button type="button" id="searchBtn">Search</button>
+      </form>
+      <div class="header-actions">
+        <button id="openCart" class="cart-btn" aria-label="Open cart">
+          <span>Cart</span>
+          <span class="badge" id="cartCount">0</span>
+        </button>
+        <a class="btn" href="orders.html" id="ordersLink">Orders</a>
+        <a class="btn" href="admin.html" id="adminLink" style="display:none">Admin</a>
+        <a class="btn primary" href="login.html" id="loginLink">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="filters">
+      <div class="filter-group">
+        <label for="category">Category</label>
+        <select id="category">
+          <option value="all">All</option>
+          <option value="pain">Pain Relief</option>
+          <option value="cold">Cold & Flu</option>
+          <option value="diabetes">Diabetes</option>
+          <option value="heart">Heart</option>
+          <option value="supplement">Supplements</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="sort">Sort</label>
+        <select id="sort">
+          <option value="relevance">Relevance</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating-desc">Rating</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="disease">Disease</label>
+        <select id="disease">
+          <option value="all">All</option>
+          <option value="fever">Fever</option>
+          <option value="pain">Pain</option>
+          <option value="cold">Cold & Allergy</option>
+          <option value="diabetes">Diabetes</option>
+          <option value="cardiac">Cardiac</option>
+          <option value="vitamins">Vitamins</option>
+          <option value="general">General Wellness</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="occasion">Occasion</label>
+        <select id="occasion">
+          <option value="all">All</option>
+          <option value="daily">Daily</option>
+          <option value="seasonal">Seasonal</option>
+          <option value="travel">Travel</option>
+          <option value="post-surgery">Post‑Surgery</option>
+          <option value="sports">Sports</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="brand">Brand</label>
+        <select id="brand">
+          <option value="all">All</option>
+          <option value="MediCure">MediCure</option>
+          <option value="HealWell">HealWell</option>
+          <option value="SootheKof">SootheKof</option>
+          <option value="ClearAll">ClearAll</option>
+          <option value="GlucoCare">GlucoCare</option>
+          <option value="AccuSense">AccuSense</option>
+          <option value="CardioPlus">CardioPlus</option>
+          <option value="NutraBest">NutraBest</option>
+          <option value="SunD3">SunD3</option>
+          <option value="CardioEase">CardioEase</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="ratingMin">Min Rating</label>
+        <select id="ratingMin">
+          <option value="0">Any</option>
+          <option value="3">3★</option>
+          <option value="4">4★</option>
+          <option value="4.5">4.5★</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Price Range</label>
+        <div class="range-row">
+          <input type="number" id="priceMin" placeholder="Min" min="0" step="1" />
+          <input type="number" id="priceMax" placeholder="Max" min="0" step="1" />
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>Rx Required</label>
+        <label class="check"><input type="checkbox" id="rxOnly" /> Show Rx-only</label>
+      </div>
+    </section>
+
+    <section>
+      <div id="grid" class="grid"></div>
+    </section>
+  </main>
+
+  <aside id="cartDrawer" class="drawer" aria-hidden="true" aria-labelledby="cartTitle" role="dialog">
+    <div class="drawer-inner">
+      <div class="drawer-header">
+        <h2 id="cartTitle">Your Cart</h2>
+        <button id="closeCart" class="icon-btn" aria-label="Close cart">✕</button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="cart-footer">
+        <div class="totals">
+          <div><span>Subtotal</span><strong id="subtotal">₹0.00</strong></div>
+          <div><span>Delivery</span><strong id="delivery">₹29.00</strong></div>
+          <div class="total"><span>Total</span><strong id="total">₹29.00</strong></div>
+        </div>
+        <button id="checkout" class="btn primary">Checkout</button>
+      </div>
+    </div>
+  </aside>
+
+  <dialog id="checkoutDialog">
+    <form method="dialog" id="checkoutForm" class="checkout-form">
+      <h3>Checkout</h3>
+      <label>Full Name<input required name="name" /></label>
+      <label>Phone<input required name="phone" pattern="[0-9\-\+ ]{8,}" /></label>
+      <label>Address<textarea required name="address" rows="3"></textarea></label>
+      <div class="row">
+        <button class="btn" value="cancel">Cancel</button>
+        <button class="btn primary" id="placeOrder" value="default">Place Order</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="orderDialog">
+    <div class="order-confirm">
+      <h3>Order Confirmed</h3>
+      <p id="orderMsg">Your order has been placed.</p>
+      <button class="btn" id="closeOrder">Close</button>
+    </div>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="docs.txt" target="_blank">Project Docs (FR, Personas, Scenarios, Journey Map, Auth, Orders)</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

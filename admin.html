@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin – MediMart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">MediMart</a>
+      <div class="header-actions">
+        <a class="btn" href="orders.html">Orders</a>
+        <a class="btn" href="admin.html" id="adminLink">Admin</a>
+        <a class="btn primary" href="login.html" id="loginLink">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Admin Dashboard</h1>
+    <p class="muted">Update inventory (price, stock) and track all orders. Changes persist in your browser.</p>
+
+    <section class="section">
+      <h2>Inventory</h2>
+      <div id="invTable"></div>
+    </section>
+
+    <section class="section">
+      <h2>All Orders</h2>
+      <p id="ordersEmpty" class="muted">No orders yet.</p>
+      <div id="ordersList" class="orders"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="index.html">Back to Shop</a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Protect admin page
+    (function(){
+      const auth = (function(){ try{return JSON.parse(localStorage.getItem('medimart_auth_v1'))||null;}catch(e){return null;} })();
+      if(!auth || auth.role !== 'admin'){
+        alert('Admin access required. Redirecting to login.');
+        location.href = 'login.html';
+        return;
+      }
+    })();
+
+    // Render inventory table and bind updates
+    function renderInventory(){
+      const inv = (function(){ try{return JSON.parse(localStorage.getItem('medimart_inventory_v1'))}catch(e){return null} })();
+      const table = document.createElement('table');
+      table.className = 'table';
+      table.innerHTML = `
+        <thead><tr><th>ID</th><th>Name</th><th>Brand</th><th>Category</th><th>Price (₹)</th><th>Stock</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${PRODUCTS.map(p=>{
+            const cur = (inv && inv[p.id]) ? inv[p.id] : {price:p.price, stock:20};
+            return `
+            <tr data-id="${p.id}">
+              <td>${p.id}</td>
+              <td>${p.name}</td>
+              <td>${p.brand}</td>
+              <td>${p.category}</td>
+              <td><input type="number" step="1" min="0" value="${cur.price}" class="i-price" style="width:100px" /></td>
+              <td><input type="number" step="1" min="0" value="${cur.stock}" class="i-stock" style="width:100px" /></td>
+              <td><button class="btn primary i-save">Save</button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>`;
+      const host = document.getElementById('invTable');
+      host.innerHTML = '';
+      host.appendChild(table);
+
+      host.querySelectorAll('.i-save').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const tr = btn.closest('tr');
+          const id = tr.getAttribute('data-id');
+          const price = parseFloat(tr.querySelector('.i-price').value)||0;
+          const stock = parseInt(tr.querySelector('.i-stock').value)||0;
+          setPrice(id, price);
+          setStock(id, stock);
+          alert('Saved inventory for '+id);
+          // refresh any totals in admin orders list, if needed
+          renderInventory();
+        });
+      });
+    }
+
+    renderInventory();
+    // Orders list is rendered by script.js (renderOrders) when element exists
+  </script>
+</body>
+</html>

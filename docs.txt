@@ -1,0 +1,73 @@
+MediMart – Online Medicine Marketplace (Frontend Only)
+
+1) Functional Requirements (FR)
+- FR-1: Search medicines by name/brand. Acceptance: typing term filters the grid and shows matching items.
+- FR-2: Filter by category (Pain Relief, Cold & Flu, Diabetes, Heart, Supplements). Acceptance: selecting a category limits results to that category.
+- FR-3: Sort results by price (asc/desc) or rating. Acceptance: product order updates accordingly.
+- FR-4: Rx-only toggle to show only prescription medicines. Acceptance: only items with Rx=true are shown.
+- FR-5: Additional filters: brand, min rating, price range. Acceptance: selecting values narrows results; empty price inputs ignored.
+- FR-5: Add to cart from product card. Acceptance: cart badge increments; item qty increases on repeat adds.
+- FR-6: View/Edit cart in side drawer. Acceptance: open drawer shows items, change qty with +/− updates totals; remove (✕) deletes an item.
+- FR-7: Compute subtotal, delivery, and total. Acceptance: delivery is ₹0 when subtotal > ₹499 or cart empty; else ₹29.
+- FR-8: Checkout captures name, phone, address. Acceptance: required fields validated by browser; order placed shows confirmation dialog.
+- FR-9: Persist cart and orders in localStorage. Acceptance: multiple orders retained across sessions.
+- FR-10: Orders page lists orders for current user; Admin sees all orders. Acceptance: non-admin only sees their orders; admin has an "Advance Status" action.
+- FR-11: Admin can advance order status: Placed → Processing → Out for Delivery → Delivered. Acceptance: status changes and persists.
+- FR-12: Login page sets role (User/Admin) and username. Acceptance: header shows Logout(username); logout clears auth.
+- FR-13: Product images displayed for each item. Acceptance: image renders in grid and cart.
+- FR-10: Responsive layout. Acceptance: grid collapses on small screens; cart drawer adapts to viewport.
+
+Non-Functional (NFR)
+- NFR-1: Accessibility: semantic regions, labeled controls, aria-live qty, alt text on images, proper color contrast.
+- NFR-2: Performance: static assets only; fast initial load; no external JS frameworks.
+- NFR-3: Privacy: no external network calls; all data local on device.
+
+2) Personas
+- Persona A: Anita (52). Diabetic, buys Metformin and glucometer strips monthly. Needs simple reordering and clear Rx labels. Uses Android phone.
+- Persona B: Rahul (23). Student with seasonal allergies. Price sensitive; compares brands. Uses mobile and desktop.
+- Persona C: Meera (34). Caregiver for parent with heart meds. Needs to buy multiple items at once and save delivery address.
+
+3) Scenarios
+- S1: Anita searches “metformin”, filters by Diabetes, adds to cart, checks out with saved address.
+- S2: Rahul toggles Rx-only off, sorts by price low→high, picks affordable antihistamine.
+- S3: Meera adds Atorvastatin (Rx) and Omega-3, adjusts quantities in cart, sees free delivery after ₹499.
+- S4: Admin logs in, opens Orders, advances an order from Placed to Processing and then Delivered.
+- S5: Anita uses brand filter (GlucoCare) and sets min rating 4.5 to quickly find Metformin.
+
+4) Journey Map (high-level)
+Stage: Discover
+- Actions: Lands on MediMart, tries a search.
+- Thoughts: “Is this cheaper and easy?”
+- Pain points: Overwhelming choices.
+- Opportunities: Clean defaults, relevance.
+
+Stage: Browse
+- Actions: Filter category, sort by price.
+- Thoughts: “Can I trust the listing?”
+- Pain points: Confusing Rx badges on some sites.
+- Opportunities: Clear Rx-only toggle and labels.
+
+Stage: Purchase
+- Actions: Add to cart, adjust qty, checkout.
+- Thoughts: “Will delivery be fast?”
+- Pain points: Hidden delivery fees.
+- Opportunities: Transparent totals and free-delivery threshold; clear remove control; persistent cart.
+
+Stage: Confirm
+- Actions: Submit details; see order id.
+- Thoughts: “Did it go through?”
+- Pain points: Poor feedback.
+- Opportunities: Clear confirmation dialog and saved order id; Orders page with tracking timeline; admin status controls.
+
+5) Admin Page
+- Path: admin.html (visible via Admin link when logged in as Admin).
+- Features: Inventory table (edit price, stock per product), All Orders list with status advance.
+- Data: Inventory overrides stored in localStorage (key: medimart_inventory_v1).
+- Access: Login as Admin on login.html (choose role Admin). Header shows Admin link.
+
+6) Project Updates Summary
+- Added Disease filter (fever, pain, cold, diabetes, cardiac, vitamins, general) and Occasion filter (daily, seasonal, travel, post-surgery, sports). Both combine with existing filters (category, brand, rating, price, Rx-only, search).
+- Expanded catalog with additional SKUs (topical gel, ORS, antihistamine, PPI, multivitamin, nasal spray, antihypertensive). All items include disease and occasion metadata.
+- Product images use embedded SVG data URIs for guaranteed offline rendering; consistent sizing and fallback implemented.
+- Inventory management (price, stock) is editable in Admin and enforced in cart and decreased on order placement.
+- Orders persist in localStorage; Orders page filters per user; Admin sees all and can advance status.
